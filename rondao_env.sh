@@ -20,37 +20,50 @@ print_task() {
 
 print_ok() {
   printf "\033[1;32m"
-  printf "[OK] "
+  printf "\u2611 "
   printf "\033[0;32m"
-  echo   "$1"
+  printf "$1\n"
   printf "\033[0m"
 }
 
 print_fail() {
   printf "\033[1;31m"
-  printf "[FAIL] "
+  printf "\u2612 "
   printf "\033[0;31m"
-  echo   "$1"
+  printf "$1\n"
   printf "\033[0m"
 }
 
+print_warn() {
+  printf "\033[1;33m"
+  printf "\u2612 "
+  printf "\033[0;33m"
+  printf "$1\n"
+  printf "\033[0m"
+}
+
+
 print_in_green() {
   printf "\033[0;32m"
-  echo   "     $1"
+  printf "\u21AA $1\n"
   printf "\033[0m"
 }
 
 print_in_red() {
   printf "\033[0;31m"
-  echo   "       $1"
+  printf "\u21AA $1\n"
   printf "\033[0m"
+}
+
+command_exists() {
+  command -v "$@" >/dev/null 2>&1
 }
 
 print_title
 
-# Apply GNOME settings
-print_task "Apply GNOME settings."
-if command -v gnome-shell > /dev/null 2>&1; then
+
+print_task "Apply GNOME settings"
+if command_exists gnome-shell; then
   if command -v dconf > /dev/null 2>&1; then
     if test -f dconf-gnome.ini; then
       dconf load / < dconf-gnome.ini
@@ -68,4 +81,48 @@ else
   print_in_red "Skip GNOME settings."
 fi
 
+print_task "Install Zsh"
+if ! command_exists zsh; then
+  sudo apt -y install zsh
+  if command_exists zsh; then
+    print_ok "ZSH was installed."
+  else
+    print_fail "ZSH failed to install."
+  fi
+else
+  print_ok "ZSH is already installed."
+fi
 
+print_task "Install OhMyZsh"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended"
+print_ok "OhMyZsh was installed."
+
+print_task "Copy OhMyZsh config file"
+cp .zshrc $HOME/
+print_ok "OhMyZsh config file copied."
+
+print_task "Install Meslo Nerd Font"
+wget -P ~/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+wget -P ~/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
+wget -P ~/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
+wget -P ~/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+print_ok "Meslo Nerd Font installed."
+
+print_task "Install PowerLevel10K theme for OhMyZsh"
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+print_ok "PowerLevel10K theme installed."
+
+print_task "Copy PowerLevel10K config file"
+cp .p10k.zsh $HOME/
+print_ok "PowerLevel10K config file copied."
+
+
+print_task "Change default shell to Zsh."
+if ! chsh -s "$zsh"; then
+  print_fail "chsh command unsuccessful. Change your default shell manually."
+else
+  export SHELL="$zsh"
+  print_ok "Shell successfully changed to Zsh."
+fi
+
+print_warn "You need to change your Terminal font to Meslo manually."
