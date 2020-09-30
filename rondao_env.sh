@@ -127,10 +127,10 @@ print_ok "PowerLevel10K config file copied."
 
 
 print_task "Change default shell to Zsh."
-if ! chsh -s "$zsh"; then
+if ! chsh -s command -v zsh; then
   print_fail "chsh command unsuccessful. Change your default shell manually."
 else
-  export SHELL="$zsh"
+  export SHELL=`command -v zsh`
   print_ok "Shell successfully changed to Zsh."
 fi
 
