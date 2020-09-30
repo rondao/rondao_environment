@@ -36,7 +36,7 @@ print_fail() {
 
 print_warn() {
   printf "\033[1;33m"
-  printf "\u2612 "
+  printf "\u2611 "
   printf "\033[0;33m"
   printf "$1\n"
   printf "\033[0m"
@@ -82,8 +82,12 @@ configure_gnome_settings() {
 
 install_vim() {
   print_task "Install Vim"
-  sudo apt -y install vim
-  print_ok "Vim installed."
+  if ! command_exists vim; then
+    sudo apt -y install vim
+    print_ok "Vim installed."
+  else
+    print_warn "Vim was already installed."
+  fi
 }
 
 configure_git() {
@@ -117,8 +121,12 @@ install_zsh() {
 
 install_and_configure_oh_my_zsh() {
   print_task "Install OhMyZsh"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended"
-  print_ok "OhMyZsh was installed."
+  if ! test -d $HOME/.oh-my-zsh; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended"
+    print_ok "OhMyZsh was installed."
+  else
+    print_warn "OhMyZsh was already installed."
+  fi
 
   print_task "Copy OhMyZsh config file"
   cp .zshrc $HOME/
@@ -144,8 +152,12 @@ install_meslo_font() {
 
 install_and_configure_powerlevel10k() {
   print_task "Install PowerLevel10K theme for OhMyZsh"
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-  print_ok "PowerLevel10K theme installed."
+  if ! test -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k; then
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    print_ok "PowerLevel10K theme was installed."
+  else
+    print_warn "PowerLevel10K theme was already installed."
+  fi
 
   print_task "Copy PowerLevel10K config file"
   cp .p10k.zsh $HOME/
