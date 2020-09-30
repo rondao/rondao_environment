@@ -81,6 +81,10 @@ else
   print_in_red "Skip GNOME settings."
 fi
 
+print_task "Install Vim"
+sudo apt -y install vim
+print_ok "Vim installed."
+
 print_task "Apply Git identity"
 if command_exists git; then
   git config --global user.email "rafael.rondao@gmail.com"
@@ -89,6 +93,10 @@ if command_exists git; then
 else
   print_fail "Git is not installed."
 fi
+
+print_task "Configure Git default editor to Vim"
+git config --global core.editor vim
+print_ok "Git default editor is now Vim."
 
 print_task "Install Zsh"
 if ! command_exists zsh; then
