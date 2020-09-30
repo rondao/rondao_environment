@@ -166,7 +166,7 @@ install_and_configure_powerlevel10k() {
 
 configure_zsh_as_default_shell() {
   print_task "Change default shell to Zsh."
-  if ! chsh -s command -v zsh; then
+  if ! chsh -s `command -v zsh`; then
     print_fail "chsh command unsuccessful. Change your default shell manually."
   else
     export SHELL=`command -v zsh`
