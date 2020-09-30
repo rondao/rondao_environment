@@ -81,6 +81,15 @@ else
   print_in_red "Skip GNOME settings."
 fi
 
+print_task "Apply Git identity"
+if command_exists git; then
+  git config --global user.email "rafael.rondao@gmail.com"
+  git config --global user.name "Rafael Rondao"
+  print_ok "Git identity applied."
+else
+  print_fail "Git is not installed."
+fi
+
 print_task "Install Zsh"
 if ! command_exists zsh; then
   sudo apt -y install zsh
