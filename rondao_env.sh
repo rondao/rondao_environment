@@ -127,10 +127,18 @@ install_and_configure_oh_my_zsh() {
 
 install_meslo_font() {
   print_task "Install Meslo Nerd Font"
-  wget -P ~/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
-  wget -P ~/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
-  wget -P ~/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
-  wget -P ~/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+  if test -f $HOME/'MesloLGS NF Regular.ttf'; then
+  wget -P $HOME/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+  fi
+  if test -f $HOME/'MesloLGS NF Bold.ttf'; then
+    wget -P $HOME/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
+  fi
+  if test -f $HOME/'MesloLGS NF Italic.ttf'; then
+    wget -P $HOME/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
+  fi
+  if test -f $HOME/'MesloLGS NF Bold Italic.ttf'; then
+    wget -P $HOME/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+  fi
   print_ok "Meslo Nerd Font installed."
 }
 
