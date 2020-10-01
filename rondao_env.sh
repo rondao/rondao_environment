@@ -1,5 +1,14 @@
 #!/bin/bash
 
+APT_APPS_LIST=(
+  git
+  vim
+  zsh
+  code
+  slack-desktop
+  chromium
+)
+
 print_title() {
   printf "\033[1;36m"
   echo ""
@@ -59,6 +68,19 @@ command_exists() {
   command -v "$@" >/dev/null 2>&1
 }
 
+install_apt_apps_list() {
+  print_task "Install APT apps list"
+  for app in ${APT_APPS_LIST[@]}; do
+    print_in_green "Installing $app"
+    if ! dpkg -l | grep -q $app; then
+      sudo apt -y install $app
+      print_ok "$app installed successfully."
+    else
+      print_warn "$app was already installed"
+    fi
+  done
+}
+
 configure_gnome_settings() {
   print_task "Configure GNOME settings"
   if command_exists gnome-shell; then
@@ -80,16 +102,6 @@ configure_gnome_settings() {
   fi
 }
 
-install_vim() {
-  print_task "Install Vim"
-  if ! command_exists vim; then
-    sudo apt -y install vim
-    print_ok "Vim installed."
-  else
-    print_warn "Vim was already installed."
-  fi
-}
-
 configure_git() {
   print_task "Apply Git identity"
   if command_exists git; then
@@ -103,20 +115,6 @@ configure_git() {
   print_task "Configure Git default editor to Vim"
   git config --global core.editor vim
   print_ok "Git default editor is now Vim."
-}
-
-install_zsh() {
-  print_task "Install Zsh"
-  if ! command_exists zsh; then
-    sudo apt -y install zsh
-    if command_exists zsh; then
-      print_ok "ZSH was installed."
-    else
-      print_fail "ZSH failed to install."
-    fi
-  else
-    print_ok "ZSH is already installed."
-  fi
 }
 
 install_and_configure_oh_my_zsh() {
@@ -178,9 +176,8 @@ main() {
   print_title
 
   configure_gnome_settings
-  install_vim
+  install_apt_apps_list
   configure_git
-  install_zsh
   install_and_configure_oh_my_zsh
   install_meslo_font
   install_and_configure_powerlevel10k
