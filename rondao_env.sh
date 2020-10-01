@@ -68,17 +68,44 @@ command_exists() {
   command -v "$@" >/dev/null 2>&1
 }
 
+install_with_apt() {
+  if ! dpkg -l | grep -q $1; then
+    sudo apt -y install $1
+    print_ok "$1 installed successfully."
+  else
+    print_warn "$1 was already installed"
+  fi
+}
+
 install_apt_apps_list() {
   print_task "Install APT apps list"
   for app in ${APT_APPS_LIST[@]}; do
     print_in_green "Installing $app"
-    if ! dpkg -l | grep -q $app; then
-      sudo apt -y install $app
-      print_ok "$app installed successfully."
-    else
-      print_warn "$app was already installed"
-    fi
+    install_with_apt $app
   done
+}
+
+install_interactive_dialog() {
+  print_task "Install dialog for interactive mode"
+  install_with_apt dialog
+}
+
+interactive_apt_apps_list() {
+  print_task "Open interactive APT apps list"
+
+  # dialog parameters = <tag1> <item1> <status1>...
+  local dialog_parameters=()
+  for app in ${APT_APPS_LIST[@]}; do
+    dialog_parameters+=($app)
+    dialog_parameters+=(".")
+    dialog_parameters+=(on)
+  done
+
+  APT_APPS_LIST=()
+  while IFS= read -r app; do
+    APT_APPS_LIST+=($app)
+  done <<< $(dialog --separate-output --checklist \
+                    "APT apps to install" 0 0 10 ${dialog_parameters[@]} --output-fd 1)
 }
 
 configure_gnome_settings() {
@@ -172,8 +199,32 @@ configure_zsh_as_default_shell() {
   fi
 }
 
+parse_options() {
+  while getopts "hi" opt; do
+    case "$opt" in
+    h)
+      echo "Apply Rondão configurations and install apps."
+      echo ""
+      echo "  -i	Interactive Mode. May unselect apps to install."
+      echo ""
+      exit 0
+      ;;
+    i)
+      INTERACTIVE=True
+      ;;
+    esac
+  done
+}
+
 main() {
+  parse_options "$@"
+
   print_title
+
+  if [ -v INTERACTIVE ]; then
+    install_interactive_dialog
+    interactive_apt_apps_list
+  fi
 
   configure_gnome_settings
   install_apt_apps_list
