@@ -1,0 +1,6 @@
+[user]
+	email = rafael.rondao@gmail.com
+	name = Rafael Rondao
+[core]
+	editor = vim
+	pager = less -F -X
