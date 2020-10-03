@@ -130,18 +130,22 @@ configure_gnome_settings() {
 }
 
 configure_git() {
-  print_task "Apply Git identity"
-  if command_exists git; then
-    git config --global user.email "rafael.rondao@gmail.com"
-    git config --global user.name "Rafael Rondao"
-    print_ok "Git identity applied."
-  else
+  print_task "Apply Git configurations"
+
+  if ! command_exists git; then
     print_fail "Git is not installed."
+    return
   fi
 
-  print_task "Configure Git default editor to Vim"
+  git config --global user.email "rafael.rondao@gmail.com"
+  git config --global user.name "Rafael Rondao"
+  print_ok "Identity applied."
+
   git config --global core.editor vim
-  print_ok "Git default editor is now Vim."
+  print_ok "Default editor is now Vim."
+
+  git config --global core.pager 'less -F -X'
+  print_ok "Remove paging and screen clear"
 }
 
 install_and_configure_oh_my_zsh() {
