@@ -69,7 +69,7 @@ command_exists() {
 }
 
 install_with_apt() {
-  if ! dpkg -l | grep -q $1; then
+  if ! dpkg -s $1 >/dev/null 2>&1; then
     sudo apt -y install $1
     print_ok "$1 installed successfully."
   else
