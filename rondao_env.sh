@@ -185,6 +185,29 @@ install_and_configure_powerlevel10k() {
   print_ok "PowerLevel10K config file copied."
 }
 
+install_nodejs() {
+  print_task "Install NodeJS"
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+  print_ok "Node Version Manager installed."
+
+  source $HOME/.bashrc
+  nvm install node
+  print_ok "NodeJS installed."
+
+  npm install npm -g
+  print_ok "NPM updated."
+}
+
+install_react_native() {
+  print_task "Install React Native tools"
+  if command_exists npm; then
+    npm install -g expo-cli
+    print_ok "Expo cli installed successfully."
+  else
+    print_fail "chsh command unsuccessful. Change your default shell manually."
+  do
+}
+
 configure_zsh_as_default_shell() {
   print_task "Change default shell to Zsh."
   if ! chsh -s `command -v zsh`; then
@@ -224,6 +247,8 @@ main() {
 
   configure_gnome_settings
   install_apt_apps_list
+  install_nodejs
+  install_react_native
   configure_git
   install_and_configure_oh_my_zsh
   install_meslo_font
