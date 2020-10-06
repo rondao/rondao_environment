@@ -190,7 +190,7 @@ install_nodejs() {
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
   print_ok "Node Version Manager installed."
 
-  source $HOME/.bashrc
+  eval "$(tail -n 3 $HOME/.bashrc)"
   nvm install node
   print_ok "NodeJS installed."
 
