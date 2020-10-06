@@ -154,21 +154,19 @@ install_and_configure_oh_my_zsh() {
   print_ok "OhMyZsh config file copied."
 }
 
-install_meslo_font() {
-  print_task "Install Meslo Nerd Font"
-  if ! test -f $HOME/.fonts/'MesloLGS NF Regular.ttf'; then
-    wget -P $HOME/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+install_victor_mono_nf_font() {
+  print_task "Install Victor Mono Nerd Font"
+  if ! test -f $HOME/.fonts/'Victor Mono Regular Nerd Font Complete.ttf'; then
+    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/VictorMono.zip
+    unzip VictorMono.zip -d victor_mono
+
+    mkdir $HOME/.fonts/
+    cp victor_mono/*Complete.ttf $HOME/.fonts/
+
+    rm -rf victor_mono
+    rm -rf VictorMono.zip
   fi
-  if ! test -f $HOME/.fonts/'MesloLGS NF Bold.ttf'; then
-    wget -P $HOME/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
-  fi
-  if ! test -f $HOME/.fonts/'MesloLGS NF Italic.ttf'; then
-    wget -P $HOME/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
-  fi
-  if ! test -f $HOME/.fonts/'MesloLGS NF Bold Italic.ttf'; then
-    wget -P $HOME/.fonts https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
-  fi
-  print_ok "Meslo Nerd Font installed."
+  print_ok "Victor Mono Nerd Font installed."
 }
 
 install_and_configure_powerlevel10k() {
@@ -251,7 +249,7 @@ main() {
   install_react_native
   configure_git
   install_and_configure_oh_my_zsh
-  install_meslo_font
+  install_victor_mono_nf_font
   install_and_configure_powerlevel10k
   configure_zsh_as_default_shell
 
