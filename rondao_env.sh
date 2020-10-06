@@ -185,22 +185,39 @@ install_and_configure_powerlevel10k() {
 
 install_nodejs() {
   print_task "Install NodeJS"
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
-  print_ok "Node Version Manager installed."
+  if ! test -d $HOME/.nvm; then
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+    eval "$(tail -n 3 $HOME/.bashrc)"
 
-  eval "$(tail -n 3 $HOME/.bashrc)"
-  nvm install node
-  print_ok "NodeJS installed."
+    print_ok "Node Version Manager installed."
+  else
+    print_warn "Node Version Manager was already installed."
+  fi
 
-  npm install npm -g
-  print_ok "NPM updated."
+  if ! command_exists node; then
+    nvm install node
+    print_ok "NodeJS installed."
+  else
+    print_warn "NodeJS was already installed."
+  fi
+
+  if ! command_exists npm; then
+    npm install npm -g
+    print_ok "Node Package Manager updated."
+  else
+    print_warn "Node Package Manager was already installed."
+  fi
 }
 
 install_react_native() {
   print_task "Install React Native tools"
   if command_exists npm; then
-    npm install -g expo-cli
-    print_ok "Expo cli installed successfully."
+    if ! npm list -g expo-cli >/dev/null 2>&1; then
+      npm install -g expo-cli
+      print_ok "Expo cli installed successfully."
+    else
+      print_warn "Expo cli was already installed."
+    fi
   else
     print_ok "Expo cli failed to install."
   fi
