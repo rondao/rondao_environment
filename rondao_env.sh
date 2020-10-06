@@ -4,9 +4,13 @@ APT_APPS_LIST=(
   git
   vim
   zsh
-  code
-  slack-desktop
   chromium
+)
+
+FLATPAK_APPS_LIST=(
+  com.visualstudio.code
+  com.slack.Slack
+  com.google.AndroidStudio
 )
 
 print_title() {
@@ -70,8 +74,11 @@ command_exists() {
 
 install_with_apt() {
   if ! dpkg -s $1 >/dev/null 2>&1; then
-    sudo apt -y install $1
-    print_ok "$1 installed successfully."
+    if sudo apt -y install $1; then
+      print_ok "$1 installed successfully."
+    else
+      print_fail "$1 failed to install."
+    fi
   else
     print_warn "$1 was already installed"
   fi
@@ -85,12 +92,32 @@ install_apt_apps_list() {
   done
 }
 
+install_with_flatpak() {
+  if ! flatpak info $1 >/dev/null 2>&1; then
+    if flatpak install -y flathub $1; then
+      print_ok "$1 installed successfully."
+    else
+      print_fail "$1 failed to install."
+    fi
+  else
+    print_warn "$1 was already installed"
+  fi
+}
+
+install_flatpak_apps_list() {
+  print_task "Install Flatpak apps list"
+  for app in ${FLATPAK_APPS_LIST[@]}; do
+    print_in_green "Installing $app"
+    install_with_flatpak $app
+  done
+}
+
 install_interactive_dialog() {
   print_task "Install dialog for interactive mode"
   install_with_apt dialog
 }
 
-interactive_apt_apps_list() {
+interactive_select_apt_apps() {
   print_task "Open interactive APT apps list"
 
   # dialog parameters = <tag1> <item1> <status1>...
@@ -106,6 +133,24 @@ interactive_apt_apps_list() {
     APT_APPS_LIST+=($app)
   done <<< $(dialog --separate-output --checklist \
                     "APT apps to install" 0 0 10 ${dialog_parameters[@]} --output-fd 1)
+}
+
+interactive_select_flatpak_apps() {
+  print_task "Open interactive Flatpak apps list"
+
+  # dialog parameters = <tag1> <item1> <status1>...
+  local dialog_parameters=()
+  for app in ${FLATPAK_APPS_LIST[@]}; do
+    dialog_parameters+=($app)
+    dialog_parameters+=(".")
+    dialog_parameters+=(on)
+  done
+
+  FLATPAK_APPS_LIST=()
+  while IFS= read -r app; do
+    FLATPAK_APPS_LIST+=($app)
+  done <<< $(dialog --separate-output --checklist \
+                    "Flatpak apps to install" 0 0 10 ${dialog_parameters[@]} --output-fd 1)
 }
 
 configure_gnome_settings() {
@@ -257,11 +302,13 @@ main() {
 
   if [ -v INTERACTIVE ]; then
     install_interactive_dialog
-    interactive_apt_apps_list
+    interactive_select_apt_apps
+    interactive_select_flatpak_apps
   fi
 
   configure_gnome_settings
   install_apt_apps_list
+  install_flatpak_apps_list
   install_nodejs
   install_react_native
   configure_git
