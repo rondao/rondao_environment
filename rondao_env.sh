@@ -204,8 +204,8 @@ install_react_native() {
     npm install -g expo-cli
     print_ok "Expo cli installed successfully."
   else
-    print_fail "chsh command unsuccessful. Change your default shell manually."
-  do
+    print_ok "Expo cli failed to install."
+  fi
 }
 
 configure_zsh_as_default_shell() {
