@@ -228,15 +228,33 @@ install_and_configure_powerlevel10k() {
   print_ok "PowerLevel10K config file copied."
 }
 
-install_sound_device_chooser_gnome_extension() {
+install_gnome_extension_sound_device_chooser() {
   print_task "Install sound device chooser GNOME Extension"
   git clone https://github.com/kgshank/gse-sound-output-device-chooser.git
 
-  mkdir -p $HOME/.local/share/gnome-shell/extensions/
+  mkdir -p $HOME/.local/share/gnome-shell/extensions
   cp --recursive gse-sound-output-device-chooser/sound-output-device-chooser@kgshank.net $HOME/.local/share/gnome-shell/extensions/sound-output-device-chooser@kgshank.net
 
   rm -rf gse-sound-output-device-chooser
   print_ok "Sound GNOME Extension installed."
+}
+
+install_gnome_extension_window_overlay_icon() {
+  print_task "Install WindowOverlay Icon GNOME Extension"
+  mkdir -p $HOME/.local/share/gnome-shell/extensions
+
+  wget https://extensions.gnome.org/extension-data/windowoverlay-iconssustmidown.centrum.cz.v35.shell-extension.zip
+
+  unzip windowoverlay-iconssustmidown.centrum.cz.v35.shell-extension.zip -d windowoverlay-icons@sustmidown.centrum.cz
+  cp --recursive windowoverlay-icons@sustmidown.centrum.cz $HOME/.local/share/gnome-shell/extensions/windowoverlay-icons@sustmidown.centrum.cz/
+
+  rm -rf windowoverlay-iconssustmidown.centrum.cz.v35.shell-extension.zip
+  rm -rf windowoverlay-icons@sustmidown.centrum.cz
+  print_ok "WindowOverlay Icon GNOME Extension installed."
+}
+
+restart_gnome_shell() {
+  killall -SIGQUIT gnome-shell
 }
 
 install_nodejs() {
@@ -317,19 +335,26 @@ main() {
     interactive_select_flatpak_apps
   fi
 
-  install_sound_device_chooser_gnome_extension
+  install_gnome_extension_sound_device_chooser
+  install_gnome_extension_window_overlay_icon
   configure_gnome_settings
+  restart_gnome_shell
+
   install_apt_apps_list
   install_flatpak_apps_list
+
   install_nodejs
   install_react_native
+
   configure_git
-  install_and_configure_oh_my_zsh
+
   install_victor_mono_nf_font
+
+  install_and_configure_oh_my_zsh
   install_and_configure_powerlevel10k
   configure_zsh_as_default_shell
 
-  print_warn "You need to change your Terminal font to Meslo manually."
+  print_warn "You need to change your Terminal font to Victor Mono manually."
 }
 
 main "$@"
