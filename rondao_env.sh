@@ -228,6 +228,17 @@ install_and_configure_powerlevel10k() {
   print_ok "PowerLevel10K config file copied."
 }
 
+install_sound_device_chooser_gnome_extension() {
+  print_task "Install sound device chooser GNOME Extension"
+  git clone https://github.com/kgshank/gse-sound-output-device-chooser.git
+
+  mkdir -p $HOME/.local/share/gnome-shell/extensions/
+  cp --recursive gse-sound-output-device-chooser/sound-output-device-chooser@kgshank.net $HOME/.local/share/gnome-shell/extensions/sound-output-device-chooser@kgshank.net
+
+  rm -rf gse-sound-output-device-chooser
+  print_ok "Sound GNOME Extension installed."
+}
+
 install_nodejs() {
   print_task "Install NodeJS"
   if ! test -d $HOME/.nvm; then
@@ -306,6 +317,7 @@ main() {
     interactive_select_flatpak_apps
   fi
 
+  install_sound_device_chooser_gnome_extension
   configure_gnome_settings
   install_apt_apps_list
   install_flatpak_apps_list
