@@ -355,6 +355,7 @@ main() {
   configure_zsh_as_default_shell
 
   print_warn "You need to change your Terminal font to Victor Mono manually."
+  print_warn "You need to enable GNOME Extensions installed manually."
 }
 
 main "$@"
