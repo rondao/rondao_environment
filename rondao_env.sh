@@ -5,10 +5,10 @@ APT_APPS_LIST=(
   vim
   zsh
   chromium
+  code
 )
 
 FLATPAK_APPS_LIST=(
-  com.visualstudio.code
   com.slack.Slack
   com.google.AndroidStudio
 )
