@@ -185,6 +185,10 @@ configure_git() {
   fi
 }
 
+generate_ssh_keys() {
+  ssh-keygen -t rsa -b 4096 -N "" -f $HOME/.ssh/id_rsa
+}
+
 install_and_configure_oh_my_zsh() {
   print_task "Install OhMyZsh"
   if ! test -d $HOME/.oh-my-zsh; then
@@ -346,6 +350,7 @@ main() {
   install_nodejs
   install_react_native
 
+  generate_ssh_keys
   configure_git
 
   install_victor_mono_nf_font
