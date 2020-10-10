@@ -345,7 +345,10 @@ main() {
   restart_gnome_shell
 
   install_apt_apps_list
-  install_flatpak_apps_list
+
+  if [ -v INTERACTIVE ]; then
+    install_flatpak_apps_list
+  fi
 
   install_nodejs
   install_react_native
