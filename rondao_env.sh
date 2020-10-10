@@ -261,6 +261,16 @@ restart_gnome_shell() {
   killall -SIGQUIT gnome-shell
 }
 
+install_flutter() {
+  local INSTALL=$HOME/apps
+
+  mkdir $INSTALL
+  git -C $INSTALL clone https://github.com/flutter/flutter.git
+
+  $INSTALL/flutter/bin/flutter
+  $INSTALL/flutter/bin/flutter doctor
+}
+
 install_nodejs() {
   print_task "Install NodeJS"
   if ! test -d $HOME/.nvm; then
@@ -350,6 +360,7 @@ main() {
     install_flatpak_apps_list
   fi
 
+  install_flutter
   install_nodejs
   install_react_native
 
