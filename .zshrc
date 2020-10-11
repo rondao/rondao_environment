@@ -105,6 +105,9 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# Configure Android
+export PATH="$PATH:$HOME/Android/Sdk/platform-tools:$HOME/Android/Sdk/tools"
+
 # Configure Flutter
 export PATH="$PATH:$HOME/apps/flutter/bin"
 
