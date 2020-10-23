@@ -6,10 +6,10 @@ APT_APPS_LIST=(
   zsh
   chromium
   code
+  slack-desktop
 )
 
 FLATPAK_APPS_LIST=(
-  com.slack.Slack
   com.google.AndroidStudio
 )
 
