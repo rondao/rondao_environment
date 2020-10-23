@@ -261,6 +261,19 @@ restart_gnome_shell() {
   killall -SIGQUIT gnome-shell
 }
 
+uninstall_firefox() {
+  print_task "Remove Firefox"
+  if dpkg -s firefox >/dev/null 2>&1; then
+    if sudo apt -y remove firefox; then
+      print_ok "Firefox removed successfully."
+    else
+      print_fail "Firefox failed to remove."
+    fi
+  else
+    print_warn "Firefox is not installed"
+  fi
+}
+
 install_docker() {
   sudo apt-get install \
     apt-transport-https \
@@ -387,6 +400,8 @@ main() {
   if [ -v INTERACTIVE ]; then
     install_flatpak_apps_list
   fi
+
+  uninstall_firefox
 
   install_docker
   install_kubernetes_with_minikube
