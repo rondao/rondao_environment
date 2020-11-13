@@ -105,8 +105,14 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Configure Android
+# Update PATH with local bin
+export PATH="$PATH:$HOME/.local/bin"
+
+# Configure Android SDK
 export PATH="$PATH:$HOME/Android/Sdk/platform-tools:$HOME/Android/Sdk/tools"
+
+# Configure JDK
+export PATH="$PATH:$HOME/apps/android-studio/jre/bin"
 
 # Configure Flutter
 export PATH="$PATH:$HOME/apps/flutter/bin"
