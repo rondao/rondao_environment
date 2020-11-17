@@ -4,3 +4,5 @@
 [core]
 	editor = vim
 	pager = less -F -X
+[pull]
+	ff = only
