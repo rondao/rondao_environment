@@ -10,7 +10,6 @@ APT_APPS_LIST=(
 )
 
 FLATPAK_APPS_LIST=(
-  com.google.AndroidStudio
 )
 
 print_title() {
