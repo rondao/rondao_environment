@@ -336,6 +336,13 @@ install_nodejs() {
   else
     print_warn "Node Package Manager was already installed."
   fi
+
+  if ! command_exists yarn; then
+    npm install -g yarn
+    print_ok "Yarn Package Manager installed."
+  else
+    print_warn "Yarn Package Manager was already installed."
+  fi
 }
 
 install_react_native() {
