@@ -344,6 +344,20 @@ install_nodejs() {
   fi
 }
 
+install_vue_cli() {
+  print_task "Install Vue Cli tools"
+  if command_exists npm; then
+    if ! npm list -g @vue/cli >/dev/null 2>&1; then
+      npm install -g @vue/cli
+      print_ok "Vue cli installed successfully."
+    else
+      print_warn "Vue cli was already installed."
+    fi
+  else
+    print_ok "Vue cli failed to install."
+  fi
+}
+
 install_react_native() {
   print_task "Install React Native tools"
   if command_exists npm; then
@@ -415,6 +429,7 @@ main() {
   install_flutter
   install_nodejs
   install_react_native
+  install_vue_cli
 
   generate_ssh_keys
   configure_git
