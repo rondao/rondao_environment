@@ -274,7 +274,7 @@ uninstall_firefox() {
 }
 
 install_docker() {
-  sudo apt-get install \
+  sudo apt install \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -288,8 +288,11 @@ install_docker() {
    $(lsb_release -cs) \
    stable"
 
-  sudo get update
-  sudo get install docker-ce docker-ce-cli containerd.io
+  sudo apt update
+  sudo apt install docker-ce docker-ce-cli containerd.io
+
+  sudo groupadd docker
+  sudo usermod -aG docker $USER
 }
 
 install_kubernetes_with_minikube() {
